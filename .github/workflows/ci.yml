@@ -18,7 +18,7 @@ env:
 jobs:
   test:
     name: Test ${{ matrix.crate }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     timeout-minutes: 10
     needs: gather_published_crates
     strategy:
@@ -102,7 +102,7 @@ jobs:
 
   wasm_tests:
     name: Run all WASM tests
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     steps:
       - uses: actions/checkout@v5
 
@@ -126,11 +126,11 @@ jobs:
       matrix:
         include:
           - target: "wasm32-unknown-unknown"
-            os: ubuntu-latest
+            os: [self-hosted, linux, x64]
           - target: "wasm32-unknown-emscripten"
-            os: ubuntu-latest
+            os: [self-hosted, linux, x64]
           - target: "wasm32-wasip1"
-            os: ubuntu-latest
+            os: [self-hosted, linux, x64]
           - target: "x86_64-apple-darwin"
             os: macos-latest
           - target: "x86_64-pc-windows-msvc"
@@ -154,7 +154,7 @@ jobs:
 
   msrv:
     name: Compile with MSRV
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     steps:
       - uses: actions/checkout@v5
 
@@ -178,7 +178,7 @@ jobs:
 
   feature_matrix: # Test various feature combinations work correctly
     name: Compile with select features (${{ matrix.features }})
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     strategy:
       matrix:
         include:
@@ -199,7 +199,7 @@ jobs:
 
   check-rustdoc-links:
     name: Check rustdoc intra-doc links
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     steps:
       - uses: actions/checkout@v5
 
@@ -215,7 +215,7 @@ jobs:
         run: RUSTDOCFLAGS="--deny rustdoc::broken_intra_doc_links --deny warnings" cargo doc --verbose --workspace --no-deps --all-features --document-private-items
 
   clippy:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     strategy:
       fail-fast: false
       matrix:
@@ -241,7 +241,7 @@ jobs:
 
   ipfs-integration-test:
     name: IPFS Integration tests
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     steps:
       - uses: actions/checkout@v5
 
@@ -260,7 +260,7 @@ jobs:
         run: cd ./examples/ipfs-kad/ && RUST_LOG=libp2p_swarm=debug,libp2p_kad=trace,libp2p_tcp=debug cargo run -- put-pk-record
 
   examples:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     steps:
       - uses: actions/checkout@v5
 
@@ -291,7 +291,7 @@ jobs:
           wasm-pack build --target web --out-dir static
 
   semver:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     env:
       # Unset the global `RUSTFLAGS` env to allow warnings.
       # cargo-semver-checks intentionally re-locks dependency versions
@@ -307,7 +307,7 @@ jobs:
       - run: cargo semver-checks
 
   rustfmt:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     steps:
       - uses: actions/checkout@v5
 
@@ -321,7 +321,7 @@ jobs:
         run: cargo fmt -- --check
 
   manifest_lint:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     steps:
       - uses: actions/checkout@v5
 
@@ -340,7 +340,7 @@ jobs:
           test "$ALL_FEATURES" = "$FULL_FEATURE"
 
   gather_published_crates:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     outputs:
       members: ${{ steps.cargo-metadata.outputs.members }}
     steps:
@@ -355,7 +355,7 @@ jobs:
 
   check-proto-files:
     name: Check for changes in proto files
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     steps:
       - uses: actions/checkout@v5
 
@@ -382,14 +382,14 @@ jobs:
 
   ensure-lockfile-uptodate:
     name: Ensure that `Cargo.lock` is up-to-date
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     steps:
       - uses: actions/checkout@v5
       - uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2.8.2
       - run: cargo metadata --locked --format-version=1 > /dev/null
 
   cargo-deny:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64]
     steps:
     - uses: actions/checkout@v5
     - uses: EmbarkStudios/cargo-deny-action@v2
